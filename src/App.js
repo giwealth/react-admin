@@ -19,6 +19,7 @@ const siderStyle = {
   bottom: 0,
   scrollbarWidth: 'thin',
   scrollbarGutter: 'stable',
+  borderRight: '1px solid #e6e6e6',
 };
 const headerStyle = {
   position: 'sticky',
@@ -30,6 +31,7 @@ const headerStyle = {
   padding: 0, 
   background: '#fff',
   justifyContent: 'space-between',
+  borderBottom: '1px solid #e6e6e6',
 }
 const logoStyle = {
   height: '64px',
@@ -38,6 +40,7 @@ const logoStyle = {
   position: 'sticky',
   width: '100%',
   top: 0,
+  borderBottom: '1px solid #e6e6e6',
 }
 const logoTxtStyle = {
   height: '32px',

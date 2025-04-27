@@ -1,6 +1,13 @@
 import {Card, Button, Form, Input, Row, Col, message } from 'antd'
 import {useNavigate} from 'react-router-dom'
 
+const loginStyle = {
+  height: '100vh',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+}
+
 function Login() {
   const navigate = useNavigate()
   const [messageApi, contextHolder] = message.useMessage()
@@ -21,7 +28,7 @@ function Login() {
   }
   return (
     {contextHolder},
-    <div className='login'>
+    <div style={loginStyle}>
       <Card style={{width: 400}}>
         <Row justify="center" style={{lineHeight: "50px"}}>
           <Col style={{fontSize: "18px", fontWeight: "bold"}}>后台管理</Col>
