@@ -13,10 +13,9 @@ function Login() {
   const [messageApi, contextHolder] = message.useMessage()
   const onFinish = async (loginForm) => {
     try {
-      if (loginForm.username == "admin" && loginForm.password == "admin") {
+      if (loginForm.username === "admin" && loginForm.password === "admin") {
         navigate("/home")
       } else {
-        console.log('No--->')
         messageApi.warning('账号密码错误!')
       }
     } catch (error) {
