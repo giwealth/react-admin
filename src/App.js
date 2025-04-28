@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -7,9 +7,10 @@ import {
   ReadOutlined,
   DownOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, Dropdown, Space } from 'antd';
+import { Button, Layout, Menu, Dropdown, Space, ConfigProvider, ColorPicker, Flex } from 'antd';
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 const { Header, Sider, Content } = Layout;
+
 const siderStyle = {
   overflow: 'auto',
   height: 'calc(100vh - 64px)',
@@ -42,15 +43,7 @@ const logoStyle = {
   top: 0,
   borderBottom: '1px solid #e6e6e6',
 }
-const logoTxtStyle = {
-  height: '32px',
-  background: 'rgba(20, 20, 20, .2)',
-  borderRadius: '6px',
-  fontSize: '22px',
-  fontWeight: 'bold',
-  textAlign: 'center',
-  color: '#1677ff',
-}
+
 const contentStyle = {
   margin: '24px 16px',
   padding: 24,
@@ -72,7 +65,7 @@ const menus = [
   {
     key: '/blog',
     icon: <ReadOutlined />,
-    label: '博客',
+    label: '数据',
   },
   {
     key: '/user',
@@ -90,32 +83,46 @@ const menus = [
     // ]
   },
 ]
-const personMenus = [
-  {
-    key: '1',
-    label: '个人信息',
-  },
-  {
-    key: '2',
-    label: '主题设置',
-  },
-  {
-    type: 'divider'
-  },
-  {
-    key: '3',
-    label: '退出系统',
-  }
-]
+
 
 function App() {
+  const themeColor = localStorage.getItem('themeColor') || '#1677ff'
+  const [primary, setPrimary] = useState(themeColor)
   let location = useLocation();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const defaultSelectedKeys = [location.pathname];
+  const logoTxtStyle = {
+    height: '32px',
+    background: 'rgba(20, 20, 20, .2)',
+    borderRadius: '6px',
+    fontSize: '22px',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: primary,
+  }
+  const personMenus = [
+    {
+      key: '1',
+      label: '个人信息',
+    },
+    {
+      key: '2',
+      label: '主题设置',
+    },
+    {
+      type: 'divider'
+    },
+    {
+      key: '3',
+      label: '退出系统',
+    }
+  ]
 
-  // useEffect(() => {
-  // }, []);
+  useEffect(() => {
+    console.log('--->', primary)
+    localStorage.setItem('themeColor', primary)
+  }, [primary]);
 
   const toLink = (e) => {
     navigate(e.key)
@@ -124,42 +131,55 @@ function App() {
     console.log(key)
   };
 
+
   return (
-    <Layout>
-      <Sider  trigger={null} collapsible collapsed={collapsed}>
-        <div style={logoStyle}>
-          <div style={logoTxtStyle}>{collapsed ? '后台' : '后台管理系统'}</div>
-        </div>
-        <Menu 
-          style={siderStyle}  
-          mode="inline" 
-          defaultSelectedKeys={defaultSelectedKeys} 
-          items={menus} onClick={(e) => toLink(e)} 
-        />
-      </Sider>
+    
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: primary,
+        },
+      }}
+    >
       <Layout>
-        <Header style={headerStyle}>
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={buttonStyle}
-          />
-          <div>
-            <Dropdown menu={{ items: personMenus, onClick: personEvent }}>
-              <Button type='text' icon={<UserOutlined />} style={buttonStyle} onClick={e => e.preventDefault()}>
-                <Space>
-                  <DownOutlined style={{fontSize: 10}} />
-                </Space>
-              </Button>
-            </Dropdown>
+        <Sider  trigger={null} collapsible collapsed={collapsed}>
+          <div style={logoStyle}>
+            <div style={logoTxtStyle}>{collapsed ? '后台' : '后台管理系统'}</div>
           </div>
-        </Header>
-        <Content style={contentStyle}>
-          <Outlet></Outlet>
-        </Content>
+          <Menu 
+            style={siderStyle}  
+            mode="inline" 
+            defaultSelectedKeys={defaultSelectedKeys} 
+            items={menus} onClick={(e) => toLink(e)} 
+          />
+        </Sider>
+        <Layout>
+          <Header style={headerStyle}>
+            <Button
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
+              style={buttonStyle}
+            />
+            <Flex wrap gap="small">
+              <Button type='text' style={buttonStyle}>
+                <ColorPicker value={primary} onChange={(color) => setPrimary(color.toHexString())} />
+              </Button>
+              <Dropdown menu={{ items: personMenus, onClick: personEvent }}>
+                <Button type='text' icon={<UserOutlined />} style={buttonStyle} onClick={e => e.preventDefault()}>
+                  <Space>
+                    <DownOutlined style={{fontSize: 10}} />
+                  </Space>
+                </Button>
+              </Dropdown>
+            </Flex>
+          </Header>
+          <Content style={contentStyle} type="primary">
+            <Outlet></Outlet>
+          </Content>
+        </Layout>
       </Layout>
-    </Layout>
+    </ConfigProvider>
   );
 };
 

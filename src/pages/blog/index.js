@@ -1,6 +1,10 @@
+import { Button } from 'antd';
+
 function Blog(params) {
   return (
-    <div>Blog</div>
+    <div type="primary">
+      <Button>Blog</Button>
+    </div>
   )
 }
 

@@ -1,6 +1,10 @@
+import { Button } from 'antd';
+
 function Home(params) {
     return (
-        <div>Home</div>
+        <div>
+            <Button type='primary'>确定</Button>
+        </div>
     )
 }
 

@@ -14,12 +14,12 @@ body {
   background-color: #ffffff;
   z-index: 9;
 }
-.ant-menu-light .ant-menu-item-selected {
+/* .ant-menu-light .ant-menu-item-selected {
     background-color: #e8f0fe;
-}
-.ant-menu-light .ant-menu-item-selected {
+} */
+/* .ant-menu-light .ant-menu-item-selected {
     color: #1a73e8;
-}
+} */
 .ant-menu .ant-menu-item {
 	border-radius: 0;
 	border-top-right-radius: 20px;
