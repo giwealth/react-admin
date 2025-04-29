@@ -6,15 +6,16 @@ function User() {
   const [tableData, setTableData] = useState([]);
   const [total, setTotal] = useState(0);
   const [params, setParams] = useState({
-    current: 1,
-    size: 10,
+    page: 1,
+    limit: 10,
+    search: ''
   });
 
   // 使用 useCallback 包装 getUserList 函数
   const getUserList = useCallback(async () => {
     const { data } = await api.getUserList(params)
-    setTotal(data.data.length)
-    setTableData(data.data)
+    setTotal(data.data.total)
+    setTableData(data.data.records)
   }, [params]); // 只有当 params 变化时，getUserList 函数才会重新创建
 
   useEffect(() => {
@@ -26,7 +27,7 @@ function User() {
       <Space>
         <Input.Search
           value={params.name}
-          onChange={(e) => setParams({...params, name: e.target.value})}
+          onChange={(e) => setParams({...params, search: e.target.value})}
           style={{width: '300px'}}
           allowClear
           placeholder="请输入账号"
@@ -35,11 +36,11 @@ function User() {
       </Space>
       <Table
         pagination={{
-          current: params.current,
-          pageSize: params.size,
+          current: params.page,
+          pageSize: params.limit,
           total: total,
           showTotal: (total) => `共${total}条`,
-          onChange: (page, size) => setParams({...params, current: page, size: size})
+          onChange: (page, size) => setParams({...params, page: page, limit: size})
         }}
         dataSource={tableData}
       >

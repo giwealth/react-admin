@@ -34,6 +34,11 @@ type (
 		Content   string `json:"content"`
 		CreatedAt int64  `json:"created_at"`
 	}
+	Query struct {
+		Page   int    `form:"page" json:"page"`
+		Limit  int    `form:"limit" json:"limit"`
+		Search string `form:"search" json:"search"`
+	}
 )
 
 func init() {
@@ -121,7 +126,7 @@ func main() {
 			ctx.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
 			return
 		}
-		fmt.Println(req)
+
 		if err := db.Table("users").Where("id = ?", req.ID).Delete(&req).Error; err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 			return
@@ -141,12 +146,37 @@ func main() {
 		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": ""})
 	})
 	api.GET("/users", func(ctx *gin.Context) {
-		var users []User
-		if err := db.Table("users").Find(&users).Error; err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+		var req Query
+		if err := ctx.ShouldBind(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "", "data": users})
+
+		var users []User
+		var total int64
+		if req.Search == "" {
+			offset := req.Limit * (req.Page - 1)
+			db = db.Debug()
+			if err := db.Table("users").Limit(req.Limit).Offset(offset).Find(&users).Error; err != nil {
+				ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+				return
+			}
+			
+			if err := db.Table("users").Count(&total).Error; err != nil {
+				ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+				return
+			}
+		} else {
+			if err := db.Table("users").Where("username LIKE ?", fmt.Sprintf(`%%%s%%`, req.Search)).Find(&users).Error; err != nil {
+				ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+				return
+			}
+			total = int64(len(users))
+		}
+		
+
+		data := map[string]any{"total": total, "records": users}
+		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "", "data": data})
 	})
 
 	api.POST("/blogs", func(ctx *gin.Context) {
@@ -187,12 +217,34 @@ func main() {
 		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": ""})
 	})
 	api.GET("/blogs", func(ctx *gin.Context) {
-		var blogs []Blog
-		if err := db.Table("blogs").Find(&blogs).Error; err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+		var req Query
+		if err := ctx.ShouldBind(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "", "data": blogs})
+
+		var blogs []Blog
+		var total int64
+		if req.Search == "" {
+			offset := req.Limit * (req.Page - 1)
+			if err := db.Table("blogs").Limit(req.Limit).Offset(offset).Find(&blogs).Error; err != nil {
+				ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+				return
+			}
+
+			if err := db.Table("blogs").Count(&total).Error; err != nil {
+				ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+				return
+			}
+		} else {
+			if err := db.Table("blogs").Where("title LIKE ?", fmt.Sprintf("%%%s%%", req.Search)).Find(&blogs).Error; err != nil {
+				ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
+				return
+			}
+			total = int64(len(blogs))
+		}
+		data := map[string]any{"total": total, "records": blogs}
+		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "", "data": data})
 	})
 
 	r.Run(":9000") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
