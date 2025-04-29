@@ -3,7 +3,7 @@ import { Input, Table, Space} from "antd";
 import api from "../../api/api"
 
 function User() {
-  const [tableData, setTableData] = useState([]);
+  const [dataSource, setDataSource] = useState([]);
   const [total, setTotal] = useState(0);
   const [params, setParams] = useState({
     page: 1,
@@ -11,16 +11,16 @@ function User() {
     search: ''
   });
 
-  // 使用 useCallback 包装 getUserList 函数
-  const getUserList = useCallback(async () => {
+  // 使用 useCallback 包装 getDataSource 函数
+  const getDataSource = useCallback(async () => {
     const { data } = await api.getUserList(params)
     setTotal(data.data.total)
-    setTableData(data.data.records)
-  }, [params]); // 只有当 params 变化时，getUserList 函数才会重新创建
+    setDataSource(data.data.records)
+  }, [params]); // 只有当 params 变化时，getDataSource 函数才会重新创建
 
   useEffect(() => {
-    getUserList();
-  }, [getUserList]); // 依赖 getUserList
+    getDataSource();
+  }, [getDataSource]); // 依赖 getDataSource
   
   return (
     <>
@@ -39,10 +39,12 @@ function User() {
           current: params.page,
           pageSize: params.limit,
           total: total,
+          showSizeChanger: true,
+          showQuickJumper: true,
           showTotal: (total) => `共${total}条`,
           onChange: (page, size) => setParams({...params, page: page, limit: size})
         }}
-        dataSource={tableData}
+        dataSource={dataSource}
       >
         <Table.Column title="编号" dataIndex="id" key="id" />
         <Table.Column title="账号" dataIndex="username" key="username" />
