@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/pkg/errors"
@@ -64,7 +65,12 @@ func main() {
 	r := gin.New()
 	r.Use(gin.LoggerWithFormatter(logFormat))
 	r.Use(gin.Recovery())
+	cfg := cors.DefaultConfig()
+	cfg.AllowAllOrigins = true
+	cfg.AllowCredentials = true
 
+	cfg.AddAllowHeaders("*")
+	r.Use(cors.New(cfg))
 	api := r.Group("/api")
 	api.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
@@ -107,7 +113,7 @@ func main() {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message":"", "data": req})
+		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "", "data": req})
 	})
 	api.DELETE("/users", func(ctx *gin.Context) {
 		var req User
@@ -143,7 +149,6 @@ func main() {
 		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "", "data": users})
 	})
 
-
 	api.POST("/blogs", func(ctx *gin.Context) {
 		var req Blog
 		if err := ctx.ShouldBind(&req); err != nil {
@@ -155,7 +160,7 @@ func main() {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message":"", "data": req})
+		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "", "data": req})
 	})
 	api.DELETE("/blogs", func(ctx *gin.Context) {
 		var req Blog
@@ -190,7 +195,7 @@ func main() {
 		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "", "data": blogs})
 	})
 
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	r.Run(":9000") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
 
 func logFormat(param gin.LogFormatterParams) string {

@@ -94,7 +94,7 @@ function App() {
   const defaultSelectedKeys = [location.pathname];
   const logoTxtStyle = {
     height: '32px',
-    background: 'rgba(20, 20, 20, .2)',
+    // background: 'rgba(20, 20, 20, .2)',
     borderRadius: '6px',
     fontSize: '22px',
     fontWeight: 'bold',
@@ -120,20 +120,10 @@ function App() {
   ]
 
   useEffect(() => {
-    console.log('--->', primary)
     localStorage.setItem('themeColor', primary)
   }, [primary]);
 
-  const toLink = (e) => {
-    navigate(e.key)
-  };
-  const personEvent = ({key}) => {
-    console.log(key)
-  };
-
-
   return (
-    
     <ConfigProvider
       theme={{
         token: {
@@ -150,7 +140,7 @@ function App() {
             style={siderStyle}  
             mode="inline" 
             defaultSelectedKeys={defaultSelectedKeys} 
-            items={menus} onClick={(e) => toLink(e)} 
+            items={menus} onClick={(e) => navigate(e.key)} 
           />
         </Sider>
         <Layout>
@@ -165,7 +155,7 @@ function App() {
               <Button type='text' style={buttonStyle}>
                 <ColorPicker value={primary} onChange={(color) => setPrimary(color.toHexString())} />
               </Button>
-              <Dropdown menu={{ items: personMenus, onClick: personEvent }}>
+              <Dropdown menu={{ items: personMenus, onClick: (e) => console.log(e.key) }}>
                 <Button type='text' icon={<UserOutlined />} style={buttonStyle} onClick={e => e.preventDefault()}>
                   <Space>
                     <DownOutlined style={{fontSize: 10}} />
@@ -174,7 +164,7 @@ function App() {
               </Dropdown>
             </Flex>
           </Header>
-          <Content style={contentStyle} type="primary">
+          <Content style={contentStyle}>
             <Outlet></Outlet>
           </Content>
         </Layout>
