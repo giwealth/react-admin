@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, message } from "react";
 import { Input, Table, Space, Button, Popconfirm, ConfigProvider } from "antd";
-import  EditDialog from "../component/EditDialog"
+import  EditDialog from "../components/EditDialog"
 import zhCN from "antd/locale/zh_CN";
 import api from "../../api/api"
 import moment from "moment";
