@@ -51,11 +51,7 @@ const contentStyle = {
   background: '#fff',
   borderRadius: 8,
 }
-const buttonStyle = {
-  fontSize: '16px',
-  width: 64,
-  height: 64,
-}
+
 const menus = [
   {
     key: '/home',
@@ -92,6 +88,12 @@ function App() {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const defaultSelectedKeys = [location.pathname];
+  const buttonStyle = {
+    fontSize: '16px',
+    width: 64,
+    height: 64,
+    color: primary,
+  }
   const logoTxtStyle = {
     height: '32px',
     // background: 'rgba(20, 20, 20, .2)',

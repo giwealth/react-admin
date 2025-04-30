@@ -24,7 +24,7 @@ function User() {
   
   return (
     <>
-      <Space>
+      <Space style={{ marginBottom: "20px" }}>
         <Input.Search
           value={params.name}
           onChange={(e) => setParams({...params, search: e.target.value})}
