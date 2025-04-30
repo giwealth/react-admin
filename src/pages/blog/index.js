@@ -81,30 +81,31 @@ function Blog() {
   // 提交事件
   const handleSubmit = async (values) => {
     setConfirmLoading(true);
-
-    if (isEditMode) {
-      // 更新
-      const newEditRecord = {...editRecord, ...values}
-      await api.updateBlog(newEditRecord)
+    try {
+      if (isEditMode) {
+        // 更新
+        const newEditRecord = {...editRecord, ...values}
+        
+        await api.updateBlog(newEditRecord)
+        const newDataSource = dataSource.map(item => 
+          // {}中为展运算符, ...item 首先复制当前对象的所有属性, ...values 然后用新的值覆盖对应的属性
+          item.id === editRecord.id ? { ...item, ...values } : item
+        );
+        setDataSource(newDataSource);
       
-      const newDataSource = dataSource.map(item => 
-        // {}中为展运算符, ...item 首先复制当前对象的所有属性, ...values 然后用新的值覆盖对应的属性
-        item.id === editRecord.id ? { ...item, ...values } : item
-      );
-      setDataSource(newDataSource);
-      // message.success('Item updated successfully');
-    } else {
-      // 新增
-      const newRecord = {
-        ...values,
-      };
-      const res = await api.createBlog(newRecord)
-      setDataSource([res.data.data, ...dataSource]);
-      // message.success('Item added successfully');
+      } else {
+        // 新增
+        const newRecord = {
+          ...values,
+        };
+        const res = await api.createBlog(newRecord)
+        setDataSource([res.data.data, ...dataSource]);
+      }
+      setConfirmLoading(false);
+      setVisible(false);
+    } catch (error) {
+      console.error('请求服务端错误', error)
     }
-    
-    setConfirmLoading(false);
-    setVisible(false);
   };
   
   return (

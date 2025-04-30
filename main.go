@@ -118,7 +118,7 @@ func main() {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "", "data": req})
+		ctx.JSON(http.StatusOK, gin.H{"code": 2001, "message": "", "data": req})
 	})
 	api.DELETE("/users", func(ctx *gin.Context) {
 		var req User
@@ -131,7 +131,7 @@ func main() {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": ""})
+		ctx.JSON(http.StatusOK, gin.H{"code": 2003, "message": ""})
 	})
 	api.PUT("/users", func(ctx *gin.Context) {
 		var req User
@@ -143,7 +143,7 @@ func main() {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": ""})
+		ctx.JSON(http.StatusOK, gin.H{"code": 2002, "message": ""})
 	})
 	api.GET("/users", func(ctx *gin.Context) {
 		var req Query
@@ -190,7 +190,7 @@ func main() {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "", "data": req})
+		ctx.JSON(http.StatusOK, gin.H{"code": 2001, "message": "", "data": req})
 	})
 	api.DELETE("/blogs", func(ctx *gin.Context) {
 		var req Blog
@@ -202,7 +202,7 @@ func main() {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": ""})
+		ctx.JSON(http.StatusOK, gin.H{"code": 2003, "message": ""})
 	})
 	api.PUT("/blogs", func(ctx *gin.Context) {
 		var req Blog
@@ -210,11 +210,12 @@ func main() {
 			ctx.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": err.Error()})
 			return
 		}
+
 		if err := db.Table("blogs").Where("id = ?", req.ID).Updates(&req).Error; err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": ""})
+		ctx.JSON(http.StatusOK, gin.H{"code": 2002, "message": ""})
 	})
 	api.GET("/blogs", func(ctx *gin.Context) {
 		var req Query

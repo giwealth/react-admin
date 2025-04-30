@@ -14,9 +14,15 @@ function User() {
 
   // 使用 useCallback 包装 getDataSource 函数
   const getDataSource = useCallback(async () => {
-    const { data } = await api.getUserList(params)
-    setTotal(data.data.total)
-    setDataSource(data.data.records)
+    try {
+      const { status, data } = await api.getUserList(params)
+      if (status) {
+        setTotal(data.data.total)
+        setDataSource(data.data.records)
+      }
+    } catch (error) {
+      console.error('获取数据失败', error)
+    }
   }, [params]); // 只有当 params 变化时，getDataSource 函数才会重新创建
 
   useEffect(() => {
