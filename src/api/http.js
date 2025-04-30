@@ -1,11 +1,12 @@
 import axios from 'axios'
 import { message } from 'antd'
 import {useNavigate} from 'react-router-dom'
-// const { message } = App.useApp();
+
 const instance = axios.create({
   baseURL: 'http://10.0.2.99:9000',
   timeout: 5000
 })
+
 // 添加请求拦截器
 instance.interceptors.request.use((config) => {
   // config.headers["content-type"] = "application/json"

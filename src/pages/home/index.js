@@ -1,9 +1,9 @@
-import { Button } from 'antd';
+import { Button, App } from 'antd';
 
 function Home(params) {
-  // const [messageApi, contextHolder] = message.useMessage();
+  const { message } = App.useApp();
   const handleOk = () => {
-    // messageApi.success("hello")
+    message.success('aaaaa')
   }
   return (
     <div>
