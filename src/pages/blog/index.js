@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, message } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Input, Table, Space, Button, Popconfirm, ConfigProvider } from "antd";
 import  EditDialog from "../components/EditDialog"
 import zhCN from "antd/locale/zh_CN";
@@ -122,6 +122,7 @@ function Blog() {
       </Space>
       <ConfigProvider locale={zhCN}>
         <Table
+          rowKey="id"
           pagination={{
             current: params.page,
             pageSize: params.limit,

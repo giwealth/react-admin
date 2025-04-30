@@ -157,7 +157,7 @@ func main() {
 		if req.Search == "" {
 			offset := req.Limit * (req.Page - 1)
 			db = db.Debug()
-			if err := db.Table("users").Limit(req.Limit).Order("created_at desc").Offset(offset).Find(&users).Error; err != nil {
+			if err := db.Table("users").Limit(req.Limit).Offset(offset).Find(&users).Error; err != nil {
 				ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 				return
 			}
@@ -167,7 +167,7 @@ func main() {
 				return
 			}
 		} else {
-			if err := db.Table("users").Where("username LIKE ?", fmt.Sprintf(`%%%s%%`, req.Search)).Order("created_at desc").Find(&users).Error; err != nil {
+			if err := db.Table("users").Where("username LIKE ?", fmt.Sprintf(`%%%s%%`, req.Search)).Find(&users).Error; err != nil {
 				ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": err.Error()})
 				return
 			}
