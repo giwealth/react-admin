@@ -152,6 +152,9 @@ func main() {
 			return
 		}
 
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": "not found"})
+				return
+
 		var users []User
 		var total int64
 		if req.Search == "" {

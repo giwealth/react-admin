@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { message } from 'antd'
 import {useNavigate} from 'react-router-dom'
-// import { getToken } from "./token.js"
+// const { message } = App.useApp();
 const instance = axios.create({
   baseURL: 'http://10.0.2.99:9000',
   timeout: 5000

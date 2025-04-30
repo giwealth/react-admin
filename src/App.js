@@ -81,7 +81,7 @@ const menus = [
 ]
 
 
-function App() {
+function Application() {
   const themeColor = localStorage.getItem('themeColor') || '#1677ff'
   const [primary, setPrimary] = useState(themeColor)
   let location = useLocation();
@@ -175,4 +175,4 @@ function App() {
   );
 };
 
-export default App;
+export default Application;
