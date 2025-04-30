@@ -29,6 +29,7 @@ instance.interceptors.response.use(
         case 2003:
           message.info('删除成功')
           break;
+        default: // 不加这一行eslint检查不通过
       }
     }
     return response
