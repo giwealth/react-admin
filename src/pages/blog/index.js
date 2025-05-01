@@ -104,7 +104,7 @@ function Blog() {
       setConfirmLoading(false);
       setVisible(false);
     } catch (error) {
-      console.error('请求服务端错误', error)
+      console.error('服务端错误', error)
     }
   };
   

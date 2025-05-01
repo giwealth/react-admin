@@ -93,6 +93,7 @@ function App() {
     width: 64,
     height: 64,
     color: primary,
+    borderRadius: 0
   }
   const logoTxtStyle = {
     height: '32px',
