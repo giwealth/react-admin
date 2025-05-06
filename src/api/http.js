@@ -22,13 +22,22 @@ instance.interceptors.response.use(
     if (status === 200 && data) {
       switch (data.code) {
         case 2001:
-          message.info('创建成功')
+          message.open({
+            type: 'info', 
+            content: '创建成功',
+          })
           break;
         case 2002:
-          message.info('更新成功')
+          message.open({
+            type: 'info', 
+            content: '更新成功',
+          })
           break;
         case 2003:
-          message.info('删除成功')
+          message.open({
+            type: 'info', 
+            content: '删除成功',
+          })
           break;
         default: // 不加这一行eslint检查不通过
       }
@@ -42,25 +51,44 @@ instance.interceptors.response.use(
     switch (status) {
       case 401:
         const navigate = useNavigate()
-        message.warning('登录已过期，请重新登录')
+        message.open({
+          type: 'warning', 
+          content: '登录已过期，请重新登录',
+        })
         navigate('/')
         break
       case 403:
-        message.warning('您没有权限执行此操作')
+        message.open({
+          type: 'warning', 
+          content: '您没有权限执行此操作',
+        })
         break
       case 500:
-        message.error(data.message || '服务器错误，请稍后重试')
+        message.open({
+          type: 'error', 
+          content: data.message || '服务器错误，请稍后重试',
+        })
         break
       default:
         if (status) {
           if (data.message) {
             message.warning(data.message);
+            message.open({
+              type: 'warning', 
+              content: data.message,
+            })
           } else {
-            message.warning(`请求异常 (${status})`);
+            message.open({
+              type: 'warning', 
+              content: `请求异常 (${status})`,
+            })
           }
         } else {
           // 网络错误或请求被取消
-          message.error('网络异常，请检查您的网络连接');
+          message.open({
+            type: 'error', 
+            content: '网络异常，请检查您的网络连接',
+          })
         }
     }
 
